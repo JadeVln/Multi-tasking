@@ -1,14 +1,19 @@
 # Multi-tasking Experiment 
 
-This repository contains the code necessary to perform a multitasking experiment, as described in the Experiment 1 of the paper 'Are women better than men at multi-tasking?' by Stoet et al. (2013). The experiment aims to investigate the difference of performance at multi-tasking between men and women. The hypothesis, or at least the common belief is that women are better than men at multi-tasking.  
+This repository contains the code necessary to perform a multitasking experiment, as described in the Experiment 1 of the paper 'Are women better than men at multi-tasking?' by Stoet et al. (2013). The experiment aims to investigate the difference of performance at multi-tasking between men and women. The hypothesis, or at least the common belief, is that women are better than men at multi-tasking.  
 
 ## Files 
 
 The repository includes : 
-- 4 PGN files for the stimuli used in the experiment : *losange_2.png, losange_3.png, square_2.png, square_3.png* 
-- 1 PNG file for the stimulus-response mapping : *reminder.png*
-- 1 PDF file for the paper Stoet et al. (2013) 'Are women better than men at multi-tasking': *paper.pdf*
-- 1 PYTHON file for the code of the experiment of multi-tasking : *Final_Project_W_better_than_M.py*
+- 4 PGN files for the stimuli used in the experiment :  *losange_2.png, losange_3.png, square_2.png, square_3.png* 
+- 1 PNG file for the stimulus-response mapping :  *reminder.png*
+- 1 PDF file for the paper Stoet et al. (2013) 'Are women better than men at multi-tasking':  *paper.pdf*
+- 1 PYTHON file for the code of the experiment of multi-tasking :  *Final_Project_W_better_than_M.py*
+
+In order to run the experiment, the package *Expyriment* need to be installed. Then, the python file can be run in any terminal thanks to these commands : 
+
+cd Multi-tasking
+python Final_Project_W_better_than_M.py
 
 ## Procedure
 
@@ -23,10 +28,10 @@ Participants had up to 4 seconds to respond to each stimulus, and feedback was p
 ## Instructions 
 
 In the following experiment, you will respond to four different figures. 
--	Diamond with filling of 3 dots 
 -	Diamond with filling of 2 dots 
--	Square with filling of 3 dots 
--	Square with filling of 2 dots
+-	Diamond with filling of 3 dots 
+-	Square with filling of 2 dots 
+-	Square with filling of 3 dots
 
 You will be show these figures in sequences of trials. Each time you will need to respond either with the ‘B’ keyboard button or with the ‘N’ keyboard button.
 
@@ -38,7 +43,7 @@ If the stimulus appear in the lower frame, it is the filling task. You need to i
 If the filling is two dots, you need to press B. 
 If the filling is three dots, you need to press N. 
 
-Press the SPACE BAR to view the stimulus-response mapping 
+Press the SPACE BAR to view the stimulus-response mapping.
 
 ![](reminder.png)
 

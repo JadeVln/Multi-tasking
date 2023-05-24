@@ -1,5 +1,5 @@
 
-from expyriment import design, control, stimuli, io, misc
+from expyriment import design, control, stimuli 
 import random 
 
 #Colors 
@@ -7,18 +7,18 @@ BLACK = (0,0,0)
 WHITE = (255, 255, 255)
 GREY = (127, 127, 127)
 
+#Parameters
 MAX_REP_DURATION = 4000
-LOSANGE_OR_TWO_DOTS_KEY = 'b'
-SQUARE_OR_THREE_DOTS_KEY = 'n'
+B_KEY = 'b'
+N_KEY = 'n'
 
 INTERTRIAL_DURATION = 800
 
-TRAINING_TRIALS_PER_BLOCK = 4
-TRIALS_PER_BLOCK = 6
+TRAINING_TRIALS_PER_BLOCK = 10
+TRIALS_PER_BLOCK = 64
 
 
 exp = design.Experiment(name=" Multitasking Experiment", background_colour = GREY)
-#control.set_develop_mode(on=True)  ## Set develop mode. Comment out for actual experiment
 control.defaults.auto_create_subject_id = True
 control.defaults.initialize_delay = 5
 
@@ -35,7 +35,6 @@ label_bottom = stimuli.TextLine("FILLING", position=(0, -0.45*H), text_size=80, 
 
 
 #Create a function to create the canvas with the frame and the stimulus 
-
 def create_canvas(stim, position) : 
     if position == 'up' : 
         stim.reposition((0, 0.2 * H))
@@ -51,20 +50,6 @@ def create_canvas(stim, position) :
     label_bottom.plot(canvas)
 
     return canvas
-"""
-def create_canvas_down(stim) : 
-    stim.reposition((0, -0.2 * H))
-    stim.scale((0.7, 0.7))
-
-    canvas = stimuli.Canvas((W, H))
-    stim.plot(canvas)
-    frame.plot(canvas)
-    line.plot(canvas)
-    label_top.plot(canvas)
-    label_bottom.plot(canvas)
-
-    return canvas
-"""
 
 #Load all the stimuli images into variables 
 square_2u = stimuli.Picture("square_2.png")
@@ -90,6 +75,7 @@ canvas_s3d = create_canvas(square_3d, 'down')
 canvas_l2d = create_canvas(losange_2d, 'down')
 canvas_l3d = create_canvas(losange_3d, 'down')
 
+# Define list in order to get the factor for the data collection
 up = [canvas_s2u, canvas_s3u, canvas_l2u, canvas_l3u]
 down = [canvas_s2d, canvas_s3d, canvas_l2d, canvas_l3d]
 
@@ -105,6 +91,7 @@ def create_block(name, stimulus_c, stimulus_in, num_trials) :
     for _ in range(num_trials//2):
         trial = design.Trial()
         choice_stim = random.choice(stimulus_c)
+
         if choice_stim in up :
             trial.set_factor("Task", "Shape")
         else : 
@@ -125,7 +112,7 @@ def create_block(name, stimulus_c, stimulus_in, num_trials) :
 
         trial = design.Trial()
         choice_stim = random.choice(stimulus_in)
-        trial.add_stimulus(choice_stim)
+
         if choice_stim in up :
             trial.set_factor("Task", "Shape")
         else : 
@@ -140,10 +127,11 @@ def create_block(name, stimulus_c, stimulus_in, num_trials) :
             trial.set_factor("Dots", "Two")
         else : 
             trial.set_factor("Dots", "Three")
+        
+        trial.add_stimulus(choice_stim)
         block.add_trial(trial)
+
     block.shuffle_trials()
-
-
     return block 
 
 
@@ -175,7 +163,6 @@ blocks.append(create_block("Mixed Task Block", stimuli_c, stimuli_in, TRIALS_PER
 
 
 #Create list of stimuli for the feedback message
-
 REP_B = [canvas_l2u, canvas_l3u, canvas_l2d, canvas_s2d]
 REP_N = [canvas_s2u, canvas_s3u, canvas_l3d, canvas_s3d]
 
@@ -184,19 +171,24 @@ def show_feedback(trial, key):
     stimulus = trial.stimuli[0]
     REMINDER_KEY_STIMULUS = False
     feedback_text = ''
+    ok = True 
 
     if key == None : 
         feedback_text = 'Time is up'
         REMINDER_KEY_STIMULUS = True 
+        ok = False
     else : 
         if stimulus in REP_B : 
-            if key !=  LOSANGE_OR_TWO_DOTS_KEY : 
+            if key !=  B_KEY : 
                 feedback_text = "That was the wrong key"
                 REMINDER_KEY_STIMULUS = True 
+                ok = False
         elif stimulus in REP_N : 
-            if key != SQUARE_OR_THREE_DOTS_KEY : 
+            if key != N_KEY : 
                 feedback_text = "That was the wrong key"
                 REMINDER_KEY_STIMULUS = True 
+                ok = False
+
 
     feedback = stimuli.TextLine(feedback_text, position=(0, 0), text_size=60, text_colour=BLACK)
     feedback.present()
@@ -209,6 +201,8 @@ def show_feedback(trial, key):
         reminder.unload()
         blankscreen.present()
         exp.clock.wait(500)
+
+    return ok
 
 
 
@@ -236,8 +230,8 @@ If the stimulus appear in the lower frame, it is the filling task. You need to i
 If the filling is two dots, you need to press B. 
 If the filling is three dots, you need to press N. 
 
-Press the SPACE BAR to see a recapitulative table with the stimulus.  
-""", heading_size=80, heading_colour=BLACK, text_size=50, text_colour=BLACK)
+Press the SPACE BAR to view the stimulus-response mapping  
+""", heading_size=85, heading_colour=BLACK, text_size=55, text_colour=BLACK)
 
 # Run the experiment
 instructions.present()
@@ -251,12 +245,12 @@ for block in blocks:
         exp.clock.wait(INTERTRIAL_DURATION)
         trial.stimuli[0].present()
         key, rt = exp.keyboard.wait_char([LOSANGE_OR_TWO_DOTS_KEY, SQUARE_OR_THREE_DOTS_KEY], duration=MAX_REP_DURATION)
-        show_feedback(trial, key)
+        ok = show_feedback(trial, key)
 
         exp.data.add([block.name,
             trial.get_factor("Task"),
             trial.get_factor("Form"),
             trial.get_factor("Dots"),
-            key, rt])
+            key, rt, ok])
 
 control.end()
