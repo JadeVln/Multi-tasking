@@ -75,6 +75,21 @@ canvas_s3d = create_canvas(square_3d, 'down')
 canvas_l2d = create_canvas(losange_2d, 'down')
 canvas_l3d = create_canvas(losange_3d, 'down')
 
+
+#Create list of stimuli for the different blocks 
+# incongruent stimuli : canvas_l3# and canvas_s2#
+# congruent stimuli : canvas_l2# and canvas_s3#
+# stimuli for shape task : canvas_##u
+# stimuli for filling task : canvas_##d
+stimuli_in = [canvas_l3u, canvas_s2u, canvas_l3d, canvas_s2d]
+stimuli_c = [canvas_l2u, canvas_s3u, canvas_l2d, canvas_s3d]
+
+stimuli_shape_in= [canvas_l3u, canvas_s2u]
+stimuli_shape_c = [canvas_l2u, canvas_s3u]
+
+stimuli_filling_in = [canvas_l3d, canvas_s2d]
+stimuli_filling_c = [canvas_l2d, canvas_s3d]
+
 # Define list in order to get the factor for the data collection
 up = [canvas_s2u, canvas_s3u, canvas_l2u, canvas_l3u]
 down = [canvas_s2d, canvas_s3d, canvas_l2d, canvas_l3d]
@@ -135,22 +150,6 @@ def create_block(name, stimulus_c, stimulus_in, num_trials) :
     return block 
 
 
-#Create list of stimuli for the different blocks 
-# incongruent stimuli : canvas_l3# and canvas_s2#
-# congruent stimuli : canvas_l2# and canvas_s3#
-# stimuli for shape task : canvas_##u
-# stimuli for filling task : canvas_##d
-
-stimuli_in = [canvas_l3u, canvas_s2u, canvas_l3d, canvas_s2d]
-stimuli_c = [canvas_l2u, canvas_s3u, canvas_l2d, canvas_s3d]
-
-stimuli_shape_in= [canvas_l3u, canvas_s2u]
-stimuli_shape_c = [canvas_l2u, canvas_s3u]
-
-stimuli_filling_in = [canvas_l3d, canvas_s2d]
-stimuli_filling_c = [canvas_l2d, canvas_s3d]
-
-
 # Create blocks and trials for training
 blocks =[]
 
@@ -174,18 +173,18 @@ def show_feedback(trial, key):
     ok = True 
 
     if key == None : 
-        feedback_text = 'Time is up'
+        feedback_text = 'Time is up !'
         REMINDER_KEY_STIMULUS = True 
         ok = False
     else : 
         if stimulus in REP_B : 
             if key !=  B_KEY : 
-                feedback_text = "That was the wrong key"
+                feedback_text = "That was the wrong key !"
                 REMINDER_KEY_STIMULUS = True 
                 ok = False
         elif stimulus in REP_N : 
             if key != N_KEY : 
-                feedback_text = "That was the wrong key"
+                feedback_text = "That was the wrong key !"
                 REMINDER_KEY_STIMULUS = True 
                 ok = False
 
@@ -230,8 +229,7 @@ If the stimulus appear in the lower frame, it is the filling task. You need to i
 If the filling is two dots, you need to press B. 
 If the filling is three dots, you need to press N. 
 
-Press the SPACE BAR to view the stimulus-response mapping  
-""", heading_size=85, heading_colour=BLACK, text_size=55, text_colour=BLACK)
+Press the SPACE BAR to view the stimulus-response mapping""", heading_size=80, heading_colour=BLACK, text_size=50, text_colour=BLACK)
 
 # Run the experiment
 instructions.present()
@@ -244,7 +242,7 @@ for block in blocks:
     for trial in block.trials:
         exp.clock.wait(INTERTRIAL_DURATION)
         trial.stimuli[0].present()
-        key, rt = exp.keyboard.wait_char([LOSANGE_OR_TWO_DOTS_KEY, SQUARE_OR_THREE_DOTS_KEY], duration=MAX_REP_DURATION)
+        key, rt = exp.keyboard.wait_char([B_KEY, N_KEY], duration=MAX_REP_DURATION)
         ok = show_feedback(trial, key)
 
         exp.data.add([block.name,
@@ -254,3 +252,4 @@ for block in blocks:
             key, rt, ok])
 
 control.end()
+
